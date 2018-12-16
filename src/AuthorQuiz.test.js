@@ -38,7 +38,44 @@ describe("Author Quiz", () =>
     });
 
     it("should have no background color", () =>{
-      expect(wrapper.find("div.row.turn").props().style.backgroundColor.toBe(''));
+      expect(wrapper.find("div.row.turn").props().style.backgroundColor).toBe('');
     })
+  }),
+
+  describe("When wrong answer has been selected", ()=>{
+    let wrapper;
+    beforeAll(()=>{
+      wrapper = mount(<AuthorQuiz {...(Object.assign({}, state, {highlight: 'wrong'}))} onAnswerSelected={() => {}}/>);
+    });
+    it("should have red background color", () =>{
+      expect(wrapper.find("div.row.turn").props().style.backgroundColor).toBe('red');
+    })
+  }),
+
+  describe("When correct answer has been selected", ()=>{
+    let wrapper;
+    beforeAll(()=>{
+      wrapper = mount(<AuthorQuiz {...(Object.assign({}, state, {highlight: 'correct'}))} onAnswerSelected={() => {}}/>);
+    });
+    it("should have green background color", () =>{
+      expect(wrapper.find("div.row.turn").props().style.backgroundColor).toBe('green');
+    })
+  }),
+   
+  describe("When first answer has been selected", ()=>{
+    let wrapper;
+    const handleAnswerSelected = jest.fn();
+
+    beforeAll(()=>{
+      wrapper = mount(<AuthorQuiz {...state} onAnswerSelected={handleAnswerSelected}/>);
+      wrapper.find('.answer').first().simulate('click');
+    });
+    it("onAnswerSelected should be called", () =>{
+      expect(handleAnswerSelected).toHaveBeenCalled();
+    });
+    it("first answer should be The Shining", () => {
+      expect(handleAnswerSelected).toHaveBeenCalledWith("The Shining");
+    })
+
   })
 );
